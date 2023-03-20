@@ -10,11 +10,11 @@ import java.util.Collection;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column
-//    private int id;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private int id;
+
     @Column
     private String username;
 
@@ -34,36 +34,29 @@ public class User implements UserDetails {
 
     }
 
-    public User(String username, String password, String name, String lastName, int age){
+
+
+    public User(int id, String username, String password, String name, String lastName, int age) {
+        this.id = id;
         this.username=username;
         this.password=password;
         this.name = name;
         this.lastname = lastName;
         this.age = age;
     }
-
-
-    //public User(int id, String username, String password, String name, String lastName, int age) {
-//        //this.id = id;
-//        this.username=username;
-//        this.password=password;
-//        this.name = name;
-//        this.lastname = lastName;
-//        this.age = age;
-//    }
 //    public User(String name, String lastName, int age) {
 //        this.name = name;
 //        this.lastname = lastName;
 //        this.age = age;
 //    }
 
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
