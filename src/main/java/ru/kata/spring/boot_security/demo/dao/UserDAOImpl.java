@@ -36,6 +36,8 @@ public class UserDAOImpl implements UserDAO {
     public void update(int id, User updatedUser) {
         User userToBeUpdated = show(id);
         entityManager.detach(userToBeUpdated);
+        userToBeUpdated.setUsername(updatedUser.getUsername());
+        userToBeUpdated.setPassword(updatedUser.getPassword());
         userToBeUpdated.setName(updatedUser.getName());
         userToBeUpdated.setLastName(updatedUser.getLastName());
         userToBeUpdated.setAge(updatedUser.getAge());

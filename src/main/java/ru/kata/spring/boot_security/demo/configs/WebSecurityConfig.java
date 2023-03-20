@@ -37,22 +37,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
      //аутентификация inMemory
-//    @Bean
-//    @Override
-//    public UserDetailsService userDetailsService() {
-//        UserDetails user =
-//                User.withDefaultPasswordEncoder()
-//                        .username("user")
-//                        .password("user")
-//                        .roles("USER")
-//                        .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
-
     @Bean
-    public JdbcUserDetailsManager users(DataSource dataSource){
-        JdbcUserDetailsManager users= new JdbcUserDetailsManager(dataSource);
-        return users;
+    @Override
+    public UserDetailsService userDetailsService() {
+        UserDetails user =
+                User.withDefaultPasswordEncoder()
+                        .username("user")
+                        .password("user")
+                        .roles("USER")
+                        .build();
+
+        return new InMemoryUserDetailsManager(user);
     }
+
+//    @Bean
+//    public JdbcUserDetailsManager users(DataSource dataSource){
+//        JdbcUserDetailsManager users= new JdbcUserDetailsManager(dataSource);
+//        return users;
+//    }
 }

@@ -10,7 +10,8 @@ import java.util.List;
 public interface UserDAO {
     public List<User> getAllUsers();
 
-    public User show(int id);
+    //public User show(int id);
+    public User show(String username);
 
     void save(User user);
 

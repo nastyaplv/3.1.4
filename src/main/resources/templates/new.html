@@ -7,6 +7,15 @@
 </head>
 <body>
 <form th:method="POST" th:action="@{/}" th:object="${user}">
+
+    <label for="username">Enter userName: </label>
+    <input type="text" th:charset="utf-8" th:field="*{username}" id="username"/>
+    <br/>
+
+    <label for="password">Enter password: </label>
+    <input type="text" th:charset="utf-8" th:field="*{password}" id="password"/>
+    <br/>
+
     <label for="name">Enter name: </label>
     <input type="text" th:charset="utf-8" th:field="*{name}" id="name"/>
     <br/>
