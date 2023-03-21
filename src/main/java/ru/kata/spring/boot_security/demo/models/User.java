@@ -34,8 +34,6 @@ public class User implements UserDetails {
 
     }
 
-
-
     public User(int id, String username, String password, String name, String lastName, int age) {
         this.id = id;
         this.username=username;
@@ -44,11 +42,13 @@ public class User implements UserDetails {
         this.lastname = lastName;
         this.age = age;
     }
-//    public User(String name, String lastName, int age) {
-//        this.name = name;
-//        this.lastname = lastName;
-//        this.age = age;
-//    }
+    public User(String username, String password, String name, String lastName, int age) {
+        this.username=username;
+        this.password=password;
+        this.name = name;
+        this.lastname = lastName;
+        this.age = age;
+    }
 
     public int getId() {
         return id;
@@ -69,6 +69,7 @@ public class User implements UserDetails {
     public String getLastName() {
         return lastname;
     }
+
 
     public void setLastName(String lastName) {
         this.lastname = lastName;
@@ -101,11 +102,6 @@ public class User implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
@@ -114,6 +110,13 @@ public class User implements UserDetails {
     public String getUsername() {
         return username;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -133,5 +136,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @ManyToMany
+    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role>roles;
+
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
     }
 }
