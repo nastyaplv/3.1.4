@@ -9,11 +9,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.UserDAO;
+import org.springframework.util.DigestUtils;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.reposotiries.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,32 +24,40 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    public UserDAO userDAO;
-    @Autowired
-    public UserServiceImpl(UserDAO userDAO){
-        this.userDAO=userDAO;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public List<User> getAllUsers() {
+        return entityManager.createQuery("SELECT user from User user").getResultList();
     }
 
+    @Override
+    public User show(int id) {
+        return entityManager.find(User.class, id);
+    }
 
-    public List<User> getAllUsers() {
-            return userDAO.getAllUsers();
-        }
+    @Override
+    public void save(User user) {
+        entityManager.persist(user);
+    }
 
-        public User show(int id) {
-            return userDAO.show(id);
-        }
+    @Override
+    public void update(int id, User updatedUser) {
+        User userToBeUpdated = show(id);
+        entityManager.detach(userToBeUpdated);
+        userToBeUpdated.setUsername(updatedUser.getUsername());
+        userToBeUpdated.setPassword(updatedUser.getPassword());
+        userToBeUpdated.setName(updatedUser.getName());
+        userToBeUpdated.setLastName(updatedUser.getLastName());
+        userToBeUpdated.setAge(updatedUser.getAge());
+        entityManager.merge(userToBeUpdated);
+    }
 
-        public void save(User user) {
-            userDAO.save(user);
-        }
-
-        public void update(int id, User updatedUser) {
-            userDAO.update(id, updatedUser);
-        }
-
-        public void delete(int id) {
-            userDAO.delete(id);
-        }
+    @Override
+    public void delete(int id) {
+        entityManager.remove(show(id));
+    }
 
         // Для UserDetailsService
     private UserRepository userRepository;
@@ -69,7 +79,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){            //этот метод берет пачку ролей и из них делает GrantedAuthorities
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
+    // Для страницы ввода пароля
+//    UserServiceImpl userServiceImpl = new UserServiceImpl();
+//    public String login(User user) {
+//        User findUser = userServiceImpl.findByUsername(user.getUsername());
+//        if(findUser!=null){
+//            if(DigestUtils.md5DigestAsHex((user.getPassword()).getBytes()).equals(findUser.getPassword())){
+//                return "life is beautiful"  + "your Id: " + findUser.getId();
+//            }
+//        }
+//        return "do not give up";
+//    }
+
+
 }

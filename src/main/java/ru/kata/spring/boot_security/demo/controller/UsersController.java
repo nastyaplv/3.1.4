@@ -26,13 +26,18 @@ public class UsersController {
         return "users";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/admin/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.show(id));
         return "show";
     }
+    @GetMapping("/user")
+    public String showForUser(@PathVariable("id") int id, Model model) {
+        model.addAttribute("user", userService.show(id));
+        return "user";
+    }
 
-    @GetMapping("/new")
+    @GetMapping("/admin/new")
     public String newPerson(Model model) {
         model.addAttribute("user", new User());
         return "new";
@@ -44,32 +49,29 @@ public class UsersController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("admin/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.show(id));
         return "edit";
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("admin/{id}")
     public String update(@ModelAttribute("user") User user, @PathVariable("id") int id){
         userService.update(id, user);
         return "redirect:/";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("admin/{id}")
     public String delete(@PathVariable("id") int id){
         userService.delete(id);
         return "redirect:/";
     }
 
-    @GetMapping("/index")
-    public String pageForAllUsers() {
-        return "index";
-    }
+// Для формы регистрации
+//    @RequestMapping("/login")
+//    public String loginForm(@ModelAttribute("username") String username, @ModelAttribute("password") String password, Model model) {
+//model.addAttribute(userService.)
+//        return "login";
+//    }
 
-    @GetMapping("/user")
-    public String pageAuthenticatedUser(Model model, Principal principal) {
-        model.addAttribute("user", principal);
-        return "user";
-    }
 }

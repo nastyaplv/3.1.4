@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 
 
 @Entity
@@ -138,9 +139,10 @@ public class User implements UserDetails {
         return false;
     }
 
-    @ManyToMany
-    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "role_id"))
+    @ManyToMany //(cascade = Cascade.Type.ALL)
+    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role>roles;
+    // у Трегулова private List<Role>roles;
 
 
     public Collection<Role> getRoles() {

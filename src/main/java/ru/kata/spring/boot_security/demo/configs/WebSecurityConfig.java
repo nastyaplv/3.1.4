@@ -40,17 +40,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll();
+                .formLogin(form -> form.loginPage("/login").successHandler(successUserHandler))
+                .logout().logoutSuccessUrl("/")
+                .permitAll();  //надо ли permitAll??
     }
 
-     //аутентификация inMemory
+//     аутентификация inMemory
 //    @Bean
 //    @Override
 //    public UserDetailsService userDetailsService() {
