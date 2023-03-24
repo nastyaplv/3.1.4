@@ -4,12 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.DigestUtils;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.reposotiries.UserRepository;
@@ -20,12 +19,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Repository
 @Transactional
 public class UserServiceImpl implements UserService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
 
     @Override
     public List<User> getAllUsers() {
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
+        user.setPassword((new BCryptPasswordEncoder()).encode(user.getPassword())); //
         entityManager.persist(user);
     }
 
@@ -62,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
         // Для UserDetailsService
     private UserRepository userRepository;
+
     @Autowired
     public void setUserRepository(UserRepository userRepository){
         this.userRepository=userRepository;

@@ -66,7 +66,7 @@ public class UsersController {
         return "new";
     }
 
-    @PostMapping()
+    @PostMapping("/admin")
     public String create(@ModelAttribute("user") User user) {
         userService.save(user);
         return "redirect:/admin";
