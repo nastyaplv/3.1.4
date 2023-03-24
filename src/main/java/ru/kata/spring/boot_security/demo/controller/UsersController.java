@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -18,6 +19,7 @@ import java.util.List;
 @RequestMapping("/")
 public class UsersController {
     private final UserService userService;
+    @Autowired
     public RoleRepository roleRepository;
 
     @Autowired
@@ -36,6 +38,7 @@ public class UsersController {
         model.addAttribute(user);
         return "user";
     }
+
     @GetMapping("/admin")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
@@ -47,6 +50,7 @@ public class UsersController {
         model.addAttribute("user", userService.show(id));
         return "show";
     }
+
     @GetMapping("/user/{id}")
     public String showForUser(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.show(id));
@@ -57,8 +61,8 @@ public class UsersController {
     public String newPerson(Model model) {
         model.addAttribute("user", new User());
 //        List<Role> roles = (List<Role>) roleRepository.findAll();
-        //Collection<Role> roles = (Collection<Role>)roleRepository.findAll(); //добавила
-//        model.addAttribute("allRoles", roles);
+        Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
         return "new";
     }
 
@@ -75,23 +79,17 @@ public class UsersController {
     }
 
     @PatchMapping("admin/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id){
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
         userService.update(id, user);
         return "redirect:/admin";
     }
 
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id){
+    public String delete(@PathVariable("id") int id) {
         userService.delete(id);
         return "redirect:/admin";
     }
 
-// Для формы регистрации
-//    @RequestMapping("/login")
-//    public String loginForm(@ModelAttribute("username") String username, @ModelAttribute("password") String password, Model model) {
-//model.addAttribute(userService.)
-//        return "login";
-//    }
 
 }

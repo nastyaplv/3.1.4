@@ -1,12 +1,13 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -53,14 +54,6 @@ public class User implements UserDetails {
         this.age = age;
     }
 
-//    public User(String username, String password, String name, String lastName, int age, Collection<Role> roles) {
-//        this.username=username;
-//        this.password=password;
-//        this.name = name;
-//        this.lastname = lastName;
-//        this.age = age;
-//        this.roles=roles;
-//    }
 
 
     public int getId() {
@@ -124,9 +117,25 @@ public class User implements UserDetails {
         return username;
     }
 
+    @ManyToMany //(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)//(cascade = Cascade.Type.ALL)
+    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role>roles = new HashSet<>();
+
+
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
 
 
@@ -151,27 +160,5 @@ public class User implements UserDetails {
         return false;
     }
 
-    @ManyToMany //(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)//(cascade = Cascade.Type.ALL)
-    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role>roles;
-//    private Set<Role> roles = new HashSet<>();
-    // у Трегулова private List<Role>roles;
 
-
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-//    public Set<Role> getRoles() {
-//        return roles;
-//    }
-
-
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
-//    public void setRoles(Set<Role> roles) {
-//        this.roles = roles;
-//    }
 }

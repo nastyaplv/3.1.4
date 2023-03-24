@@ -50,7 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .formLogin(form -> form.loginPage("/login").successHandler(successUserHandler))
                 .and()
                 .logout()//.logoutSuccessUrl("/")
-                .permitAll();  //надо ли permitAll??
+                .permitAll()
+                .and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login");
     }
 
 //     аутентификация inMemory
@@ -68,13 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //    }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         authenticationProvider.setUserDetailsService(userServiceImpl);
