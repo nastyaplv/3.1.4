@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -43,6 +44,7 @@ public class User implements UserDetails {
         this.lastname = lastName;
         this.age = age;
     }
+
     public User(String username, String password, String name, String lastName, int age) {
         this.username=username;
         this.password=password;
@@ -50,6 +52,16 @@ public class User implements UserDetails {
         this.lastname = lastName;
         this.age = age;
     }
+
+//    public User(String username, String password, String name, String lastName, int age, Collection<Role> roles) {
+//        this.username=username;
+//        this.password=password;
+//        this.name = name;
+//        this.lastname = lastName;
+//        this.age = age;
+//        this.roles=roles;
+//    }
+
 
     public int getId() {
         return id;
@@ -139,9 +151,10 @@ public class User implements UserDetails {
         return false;
     }
 
-    @ManyToMany //(cascade = Cascade.Type.ALL)
+    @ManyToMany //(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)//(cascade = Cascade.Type.ALL)
     @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role>roles;
+//    private Set<Role> roles = new HashSet<>();
     // у Трегулова private List<Role>roles;
 
 
@@ -149,7 +162,16 @@ public class User implements UserDetails {
         return roles;
     }
 
+//    public Set<Role> getRoles() {
+//        return roles;
+//    }
+
+
     public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
+
+//    public void setRoles(Set<Role> roles) {
+//        this.roles = roles;
+//    }
 }

@@ -45,8 +45,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin(form -> form.loginPage("/login").successHandler(successUserHandler))
-                .logout().logoutSuccessUrl("/")
+                .formLogin().successHandler(successUserHandler)
+                .permitAll()
+//                .formLogin(form -> form.loginPage("/login").successHandler(successUserHandler))
+                .and()
+                .logout()//.logoutSuccessUrl("/")
                 .permitAll();  //надо ли permitAll??
     }
 

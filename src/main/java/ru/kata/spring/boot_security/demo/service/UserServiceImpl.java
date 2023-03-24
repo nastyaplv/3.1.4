@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -51,6 +51,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userToBeUpdated.setName(updatedUser.getName());
         userToBeUpdated.setLastName(updatedUser.getLastName());
         userToBeUpdated.setAge(updatedUser.getAge());
+        userToBeUpdated.setRoles(userToBeUpdated.getRoles());
         entityManager.merge(userToBeUpdated);
     }
 

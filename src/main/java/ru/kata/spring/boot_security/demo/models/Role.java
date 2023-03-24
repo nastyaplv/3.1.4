@@ -41,6 +41,7 @@ public Role(){
         return getName();
     }
 
+
 //    @ManyToMany //(cascade = Cascade.Type.ALL)
 //    @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "role_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
 //    private Collection<User> users;
