@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.models;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,23 +34,6 @@ public class User implements UserDetails {
 
     public User() {
 
-    }
-
-    public User(int id, String username, String password, String name, String lastName, int age) {
-        this.id = id;
-        this.username=username;
-        this.password=password;
-        this.name = name;
-        this.lastname = lastName;
-        this.age = age;
-    }
-
-    public User(String username, String password, String name, String lastName, int age) {
-        this.username=username;
-        this.password=password;
-        this.name = name;
-        this.lastname = lastName;
-        this.age = age;
     }
 
 
@@ -117,7 +99,7 @@ public class User implements UserDetails {
         return username;
     }
 
-    @ManyToMany //(cascade = CascadeType.PERSIST,fetch=FetchType.EAGER)//(cascade = Cascade.Type.ALL)
+    @ManyToMany
     @JoinTable(name="users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role>roles = new HashSet<>();
 

@@ -6,7 +6,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
-        user.setPassword((new BCryptPasswordEncoder()).encode(user.getPassword())); //
+        user.setPassword((new BCryptPasswordEncoder()).encode(user.getPassword()));
         entityManager.persist(user);
     }
 
@@ -49,11 +48,15 @@ public class UserServiceImpl implements UserService {
         User userToBeUpdated = show(id);
         entityManager.detach(userToBeUpdated);
         userToBeUpdated.setUsername(updatedUser.getUsername());
-        userToBeUpdated.setPassword(updatedUser.getPassword());
+        if (!(updatedUser.getPassword().equals(userToBeUpdated.getPassword()))) {
+            userToBeUpdated.setPassword((new BCryptPasswordEncoder()).encode(updatedUser.getPassword()));
+        } else {
+            userToBeUpdated.setPassword(userToBeUpdated.getPassword());
+        }
         userToBeUpdated.setName(updatedUser.getName());
         userToBeUpdated.setLastName(updatedUser.getLastName());
         userToBeUpdated.setAge(updatedUser.getAge());
-        userToBeUpdated.setRoles(userToBeUpdated.getRoles());
+        userToBeUpdated.setRoles(updatedUser.getRoles());
         entityManager.merge(userToBeUpdated);
     }
 
@@ -72,7 +75,6 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username){
         return userRepository.findByUsername(username);
     }
-// Переводим нашего юзера в юзер, которого понимает Spring Security
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){            //этот метод берет пачку ролей и из них делает GrantedAuthorities
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
 

@@ -11,9 +11,6 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
 
 @Controller
 @RequestMapping("/")
@@ -60,7 +57,6 @@ public class UsersController {
     @GetMapping("/admin/new")
     public String newPerson(Model model) {
         model.addAttribute("user", new User());
-//        List<Role> roles = (List<Role>) roleRepository.findAll();
         Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
         model.addAttribute("allRoles", roles);
         return "new";
@@ -75,6 +71,8 @@ public class UsersController {
     @GetMapping("admin/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.show(id));
+        Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
         return "edit";
     }
 
