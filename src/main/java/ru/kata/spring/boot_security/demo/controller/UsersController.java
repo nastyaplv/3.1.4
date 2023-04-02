@@ -33,29 +33,27 @@ public class UsersController {
     public String pageForAuthenticatedUser(Principal principal, Model model) {
         User user = userService.findByUsername(principal.getName());
         model.addAttribute(user);
-        return "user";
+        if (user.getRoles().contains((Role) roleRepository.getById(2))) {
+            return "user_admin";
+        } else {
+            return "user";
+        }
     }
 
     @GetMapping("/admin")
-    public String getAllUsers(Model model) {
+    public String getAllUsers(Model model, Principal principal, @ModelAttribute("updateduser") User updateduser) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("principalUser", user);
         model.addAttribute("users", userService.getAllUsers());
+        Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
         return "users";
     }
 
-    @GetMapping("/admin/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("user", userService.show(id));
-        return "show";
-    }
-
-    @GetMapping("/user/{id}")
-    public String showForUser(@PathVariable("id") int id, Model model) {
-        model.addAttribute("user", userService.show(id));
-        return "user";
-    }
-
     @GetMapping("/admin/new")
-    public String newPerson(Model model) {
+    public String newPerson(Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("principalUser", user);
         model.addAttribute("user", new User());
         Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
         model.addAttribute("allRoles", roles);
@@ -68,17 +66,9 @@ public class UsersController {
         return "redirect:/admin";
     }
 
-    @GetMapping("admin/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userService.show(id));
-        Collection<Role> roles = (Collection<Role>)roleRepository.findAll();
-        model.addAttribute("allRoles", roles);
-        return "edit";
-    }
-
     @PatchMapping("admin/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
-        userService.update(id, user);
+    public String update(@ModelAttribute("updateduser") User updateduser, @PathVariable("id") int id) {
+        userService.update(id, updateduser);
         return "redirect:/admin";
     }
 
@@ -88,6 +78,4 @@ public class UsersController {
         userService.delete(id);
         return "redirect:/admin";
     }
-
-
 }

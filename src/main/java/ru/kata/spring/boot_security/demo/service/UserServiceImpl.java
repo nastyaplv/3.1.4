@@ -48,11 +48,7 @@ public class UserServiceImpl implements UserService {
         User userToBeUpdated = show(id);
         entityManager.detach(userToBeUpdated);
         userToBeUpdated.setUsername(updatedUser.getUsername());
-        if (!(updatedUser.getPassword().equals(userToBeUpdated.getPassword()))) {
-            userToBeUpdated.setPassword((new BCryptPasswordEncoder()).encode(updatedUser.getPassword()));
-        } else {
-            userToBeUpdated.setPassword(userToBeUpdated.getPassword());
-        }
+        userToBeUpdated.setPassword((new BCryptPasswordEncoder()).encode(updatedUser.getPassword()));
         userToBeUpdated.setName(updatedUser.getName());
         userToBeUpdated.setLastName(updatedUser.getLastName());
         userToBeUpdated.setAge(updatedUser.getAge());
@@ -65,7 +61,7 @@ public class UserServiceImpl implements UserService {
         entityManager.remove(show(id));
     }
 
-        // Для UserDetailsService
+    // Для UserDetailsService
     private UserRepository userRepository;
 
     @Autowired
