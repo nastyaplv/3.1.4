@@ -45,14 +45,40 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void update(int id, User updatedUser) {
+
         User userToBeUpdated = show(id);
         entityManager.detach(userToBeUpdated);
-        userToBeUpdated.setUsername(updatedUser.getUsername());
-        userToBeUpdated.setPassword((new BCryptPasswordEncoder()).encode(updatedUser.getPassword()));
-        userToBeUpdated.setName(updatedUser.getName());
-        userToBeUpdated.setLastName(updatedUser.getLastName());
-        userToBeUpdated.setAge(updatedUser.getAge());
-        userToBeUpdated.setRoles(updatedUser.getRoles());
+
+        if (updatedUser.getUsername().isEmpty()) {
+            userToBeUpdated.setUsername(userToBeUpdated.getUsername());
+        } else {
+            userToBeUpdated.setUsername(updatedUser.getUsername());
+        }
+        if (updatedUser.getPassword().isEmpty()) {
+            userToBeUpdated.setPassword(userToBeUpdated.getPassword());
+        } else {
+            userToBeUpdated.setPassword((new BCryptPasswordEncoder()).encode(updatedUser.getPassword()));
+        }
+        if (updatedUser.getName().isEmpty()) {
+            userToBeUpdated.setName(userToBeUpdated.getName());
+        } else {
+            userToBeUpdated.setName(updatedUser.getName());
+        }
+        if (updatedUser.getLastName().isEmpty()) {
+            userToBeUpdated.setLastName(userToBeUpdated.getLastName());
+        } else {
+            userToBeUpdated.setLastName(updatedUser.getLastName());
+        }
+        if (updatedUser.getAge()==0) {
+            userToBeUpdated.setAge(userToBeUpdated.getAge());
+        } else {
+            userToBeUpdated.setAge(updatedUser.getAge());
+        }
+        if (updatedUser.getRoles().isEmpty()) {
+            userToBeUpdated.setRoles(userToBeUpdated.getRoles());
+        } else {
+            userToBeUpdated.setRoles(updatedUser.getRoles());
+        }
         entityManager.merge(userToBeUpdated);
     }
 
