@@ -117,15 +117,15 @@
                       <strong>ID</strong>
                       <input class="form-control" type="text" th:placeholder="${user.id}" readonly>
                       <strong>First name</strong>
-                      <input class="form-control" type="text" th:field="*{name}" id="name">
+                      <input class="form-control" type="text" th:placeholder="${user.getName()}" th:field="*{name}" id="name">
                       <strong>Last name</strong>
-                      <input class="form-control" type="text"  th:field="*{lastName}" id="lastName">
+                      <input class="form-control" type="text"  th:placeholder="${user.getLastName()}" th:field="*{lastName}" id="lastName">
                       <strong>Age</strong>
-                      <input class="form-control" type="number" th:field="*{age}" id="age">
+                      <input class="form-control" th:type="number" th:name="age" id="age" th:value="${user.age}">
                       <strong>Email</strong>
-                      <input class="form-control" type="text" th:field="*{username}" id="username">
+                      <input class="form-control" type="text" th:placeholder="${user.getUsername()}" th:field="*{username}" id="username">
                       <strong>Password</strong>
-                      <input class="form-control" type="password" th:field="*{password}" id="password">
+                      <input class="form-control" type="password" th:placeholder="${user.getPassword()}" th:field="*{password}" id="password">
                       <strong>Roles</strong>
                       <select class="form-select" multiple aria-label="roles" th:field="*{roles}">
                         <option th:each="role : ${allRoles}"
